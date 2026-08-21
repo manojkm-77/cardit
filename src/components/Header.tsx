@@ -46,10 +46,10 @@ const NAV_ITEMS = [
 
 const navLinkClass = (isActive: boolean) =>
   cn(
-    'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+    'rounded-lg px-3.5 py-2 text-sm font-medium transition-all duration-200',
     isActive
-      ? 'bg-secondary text-secondary-foreground'
-      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+      ? 'bg-secondary text-secondary-foreground shadow-sm'
+      : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground'
   );
 
 export const Header: React.FC = () => {
@@ -66,29 +66,29 @@ export const Header: React.FC = () => {
   } = useCarditStore();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-14 items-center justify-between gap-4 px-4 sm:px-6">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 shadow-sm">
+      <div className="flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Left: Brand + School / Year selectors + Dataset pill */}
         <div className="flex min-w-0 items-center gap-2">
           {/* Nav trigger for viewports too narrow for the inline menu */}
           <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
             <SheetTrigger
               render={
-                <Button variant="ghost" size="icon-sm" className="xl:hidden" aria-label="Open navigation" />
+                <Button variant="ghost" size="icon-sm" className="xl:hidden hover:bg-secondary/80" aria-label="Open navigation" />
               }
             >
-              <Menu className="size-4" />
+              <Menu className="size-5" />
             </SheetTrigger>
-            <SheetContent side="left" className="w-72 gap-0">
-              <SheetHeader className="border-b">
-                <SheetTitle className="flex items-center gap-2">
-                  <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                    <CreditCard className="size-3.5" />
+            <SheetContent side="left" className="w-80 gap-0">
+              <SheetHeader className="border-b pb-4">
+                <SheetTitle className="flex items-center gap-2.5">
+                  <span className="flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+                    <CreditCard className="size-4" />
                   </span>
-                  CardIT<span className="-ml-2 text-primary">.io</span>
+                  <span className="text-base font-bold">CardIT<span className="text-primary">.io</span></span>
                 </SheetTitle>
               </SheetHeader>
-              <nav className="flex flex-col gap-1 p-3">
+              <nav className="flex flex-col gap-1.5 p-4">
                 {NAV_ITEMS.map((item) => (
                   <SheetClose
                     key={item.href}
@@ -102,8 +102,8 @@ export const Header: React.FC = () => {
               </nav>
               {/* Scope selectors live here too, since the header hides them on
                   narrow viewports. */}
-              <div className="space-y-3 border-t p-3 md:hidden">
-                <div className="space-y-1.5">
+              <div className="space-y-4 border-t p-4 md:hidden">
+                <div className="space-y-2">
                   <p className="typo-meta-label">School</p>
                   <Select value={state.currentSchoolId} onValueChange={(v) => { if (v !== null) setCurrentSchool(v); }}>
                     <SelectTrigger className="w-full">
@@ -118,7 +118,7 @@ export const Header: React.FC = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <p className="typo-meta-label">Academic Year</p>
                   <Select value={state.currentAcademicYearId} onValueChange={(v) => { if (v !== null) setCurrentAcademicYear(v); }}>
                     <SelectTrigger className="w-full">
@@ -135,27 +135,27 @@ export const Header: React.FC = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <p className="typo-meta-label">Dataset</p>
-                  <Badge variant="secondary">{currentDataset?.name}</Badge>
+                  <Badge variant="secondary" className="px-3 py-1 font-medium shadow-sm">{currentDataset?.name}</Badge>
                 </div>
               </div>
             </SheetContent>
           </Sheet>
 
-          <Link href="/" className="flex shrink-0 items-center gap-2.5">
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <CreditCard className="size-4" />
+          <Link href="/" className="flex shrink-0 items-center gap-2.5 group">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105">
+              <CreditCard className="size-4.5" />
             </span>
-            <span className="text-sm font-semibold tracking-tight text-foreground">
+            <span className="text-base font-bold tracking-tight text-foreground">
               CardIT<span className="text-primary">.io</span>
             </span>
           </Link>
 
-          <div className="mx-1 hidden h-6 w-px shrink-0 bg-border md:block" />
+          <div className="mx-2 hidden h-6 w-px shrink-0 bg-border md:block" />
 
           <Select value={state.currentSchoolId} onValueChange={(v) => { if (v !== null) setCurrentSchool(v); }}>
-            <SelectTrigger className="hidden w-[180px] shrink-0 md:flex">
+            <SelectTrigger className="hidden w-[200px] shrink-0 md:flex border-border/60 hover:border-border transition-colors">
               <SelectValue placeholder="Select school" />
             </SelectTrigger>
             <SelectContent>
@@ -168,7 +168,7 @@ export const Header: React.FC = () => {
           </Select>
 
           <Select value={state.currentAcademicYearId} onValueChange={(v) => { if (v !== null) setCurrentAcademicYear(v); }}>
-            <SelectTrigger className="hidden w-[150px] shrink-0 lg:flex">
+            <SelectTrigger className="hidden w-[160px] shrink-0 lg:flex border-border/60 hover:border-border transition-colors">
               <SelectValue placeholder="Select academic year" />
             </SelectTrigger>
             <SelectContent>
@@ -182,7 +182,7 @@ export const Header: React.FC = () => {
             </SelectContent>
           </Select>
 
-          <Badge variant="secondary" className="hidden shrink-0 lg:inline-flex">
+          <Badge variant="secondary" className="hidden shrink-0 lg:inline-flex px-3 py-1 font-medium shadow-sm">
             {currentDataset?.name}
           </Badge>
         </div>
@@ -203,12 +203,12 @@ export const Header: React.FC = () => {
         </NavigationMenu>
 
         {/* Right: Role selector + Reset */}
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2.5">
           <Select
             value={state.currentUserRole}
             onValueChange={(value) => setCurrentUserRole(value as UserRole)}
           >
-            <SelectTrigger className="w-[140px] sm:w-[180px]">
+            <SelectTrigger className="w-[140px] sm:w-[190px] border-border/60 hover:border-border transition-colors">
               <SelectValue placeholder="Select role" />
             </SelectTrigger>
             <SelectContent>
@@ -225,6 +225,7 @@ export const Header: React.FC = () => {
             size="icon"
             aria-label="Reset platform data"
             onClick={() => setResetOpen(true)}
+            className="hover:bg-secondary/80 transition-colors"
           >
             <RefreshCw className="size-4" />
           </Button>

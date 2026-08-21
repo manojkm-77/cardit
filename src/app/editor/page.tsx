@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -110,15 +110,16 @@ function LiveEditorContent() {
           <Skeleton className="lg:col-span-6 h-[540px]" />
         </div>
       ) : liveStudent ? (
-        <div className="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pb-24">
-          <Card className="lg:col-span-6 p-6 flex flex-col items-center justify-between min-h-[460px] sm:min-h-[540px]">
+        <div className="flex-1 max-w-[1600px] w-full mx-auto p-3 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start pb-28 sm:pb-24">
+          <Card className="lg:col-span-6 p-4 sm:p-6 flex flex-col items-center justify-between min-h-[380px] sm:min-h-[540px]">
             <div className="w-full flex items-center justify-between pb-4 border-b border-border">
               <Link href="/" title="Back" className="inline-flex">
                 <Button variant="ghost" size="icon-sm" aria-label="Back to Dashboard">
                   <ArrowLeft className="size-4" />
                 </Button>
               </Link>
-              <span className="font-semibold text-sm text-foreground">Live Card Render Workspace</span>
+              <span className="font-semibold text-xs sm:text-sm text-foreground hidden sm:inline">Live Card Render Workspace</span>
+              <span className="font-semibold text-xs sm:text-sm text-foreground sm:hidden">Preview</span>
               <div className="flex items-center bg-muted p-0.5 rounded-lg border border-border">
                 <Button variant={workflow.cardSide === 'front' ? 'default' : 'ghost'} size="sm" onClick={() => workflow.setCardSide('front')}>
                   Front Side
@@ -129,22 +130,30 @@ function LiveEditorContent() {
               </div>
             </div>
 
-            <div className="my-auto py-6 flex items-center justify-center">
-              <CardPreview template={currentTemplate} student={liveStudent} school={currentSchool} side={workflow.cardSide} scale={1.4} />
+            <div className="my-auto py-4 sm:py-6 flex items-center justify-center overflow-x-auto">
+              <div className="sm:hidden">
+                <CardPreview template={currentTemplate} student={liveStudent} school={currentSchool} side={workflow.cardSide} scale={0.9} />
+              </div>
+              <div className="hidden sm:block lg:hidden">
+                <CardPreview template={currentTemplate} student={liveStudent} school={currentSchool} side={workflow.cardSide} scale={1.2} />
+              </div>
+              <div className="hidden lg:block">
+                <CardPreview template={currentTemplate} student={liveStudent} school={currentSchool} side={workflow.cardSide} scale={1.4} />
+              </div>
             </div>
 
-            <div className="w-full pt-4 border-t border-border flex items-center justify-between text-sm">
+            <div className="w-full pt-3 sm:pt-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-sm">
               <div className="flex items-center gap-2 text-muted-foreground">
-                <Camera className="size-4 text-primary" />
-                <span>Photo Status: {liveStudent.photoUrl ? 'Uploaded & Matched' : 'Missing Photo'}</span>
+                <Camera className="size-4 text-primary shrink-0" />
+                <span className="text-xs sm:text-sm">Photo: {liveStudent.photoUrl ? 'Uploaded' : 'Missing'}</span>
               </div>
               <Button variant="outline" size="sm" onClick={workflow.openCropper}>
-                <Crop className="size-3.5 text-primary" /> Crop / Change Photo
+                <Crop className="size-3.5 text-primary" /> Crop / Change
               </Button>
             </div>
           </Card>
 
-          <Card className="lg:col-span-6 p-6 space-y-6">
+          <Card className="lg:col-span-6 p-4 sm:p-6 space-y-4 sm:space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-border">
               <div>
                 <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
@@ -220,31 +229,31 @@ function LiveEditorContent() {
       ) : null}
 
       {liveStudent && (
-        <div className="fixed bottom-0 left-0 right-0 z-30 bg-background/95 backdrop-blur border-t border-border px-6 py-3">
-          <div className="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" disabled={workflow.reviewIndex === 0} onClick={workflow.goPrev}>
-                <ChevronLeft className="size-4" /> Previous
+        <div className="fixed bottom-0 left-0 right-0 z-30 bg-background/95 backdrop-blur border-t border-border px-3 sm:px-6 py-2 sm:py-3">
+          <div className="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
+            <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-center sm:justify-start">
+              <Button variant="outline" size="sm" disabled={workflow.reviewIndex === 0} onClick={workflow.goPrev} className="text-xs sm:text-sm">
+                <ChevronLeft className="size-4" /> <span className="hidden sm:inline">Previous</span><span className="sm:hidden">Prev</span>
               </Button>
-              <span className="text-sm font-mono font-medium text-muted-foreground px-3">
+              <span className="text-xs sm:text-sm font-mono font-medium text-muted-foreground px-2 sm:px-3">
                 {workflow.reviewIndex !== null ? workflow.reviewIndex + 1 : 0} / {datasetStudents.length}
               </span>
-              <Button variant="outline" size="sm" disabled={workflow.reviewIndex !== null && workflow.reviewIndex >= datasetStudents.length - 1} onClick={workflow.goNext}>
+              <Button variant="outline" size="sm" disabled={workflow.reviewIndex !== null && workflow.reviewIndex >= datasetStudents.length - 1} onClick={workflow.goNext} className="text-xs sm:text-sm">
                 Next <ChevronRight className="size-4" />
               </Button>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={workflow.save}>
-                <Save className="size-4" /> Save (S)
+            <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-center sm:justify-end flex-wrap">
+              <Button variant="outline" size="sm" onClick={workflow.save} className="text-xs sm:text-sm">
+                <Save className="size-4" /> Save
               </Button>
-              <Button size="sm" onClick={workflow.saveAndNext}>
+              <Button size="sm" onClick={workflow.saveAndNext} className="text-xs sm:text-sm">
                 <Save className="size-4" /> Save & Next
               </Button>
-              <Button size="sm" onClick={workflow.verifyCurrent}>
-                <CheckCircle2 className="size-4" /> Verify (V)
+              <Button size="sm" onClick={workflow.verifyCurrent} className="text-xs sm:text-sm">
+                <CheckCircle2 className="size-4" /> Verify
               </Button>
-              <Button variant="secondary" size="sm" onClick={workflow.approveCurrent}>
-                <ShieldCheck className="size-4" /> Approve (A)
+              <Button variant="secondary" size="sm" onClick={workflow.approveCurrent} className="text-xs sm:text-sm">
+                <ShieldCheck className="size-4" /> Approve
               </Button>
             </div>
           </div>

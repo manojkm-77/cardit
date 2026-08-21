@@ -97,9 +97,9 @@ export function VerificationDialog({ workflow, template, school, studentsCount }
       <Dialog open={!!activeStudent} onOpenChange={(open) => { if (!open) close(); }}>
         <DialogContent
           showCloseButton={false}
-          className="max-w-[1360px] w-[95vw] h-[90vh] flex flex-col overflow-hidden p-0"
+          className="max-w-[1360px] w-full sm:w-[95vw] h-full sm:h-[90vh] flex flex-col overflow-hidden p-0 sm:rounded-lg rounded-none"
         >
-          <DialogHeader className="flex flex-row items-center justify-between gap-4 px-6 py-4 border-b shrink-0">
+          <DialogHeader className="flex flex-row items-center justify-between gap-2 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 border-b shrink-0">
             <div className="flex flex-col">
               <DialogTitle className="typo-card-title">{activeStudent.name}</DialogTitle>
               <p className="text-sm font-medium text-primary font-mono">
@@ -118,7 +118,7 @@ export function VerificationDialog({ workflow, template, school, studentsCount }
           </DialogHeader>
 
           {photoError && (
-            <div className="mx-6 mt-2 flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
+            <div className="mx-4 sm:mx-6 mt-2 flex items-center gap-2 rounded-lg bg-destructive/10 p-2 sm:p-3 text-xs sm:text-sm text-destructive">
               <AlertCircle className="size-4 shrink-0" />
               <span>{photoError}</span>
               <Button
@@ -133,17 +133,28 @@ export function VerificationDialog({ workflow, template, school, studentsCount }
             </div>
           )}
 
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div className="lg:col-span-5 space-y-4">
-                <div className="flex items-center justify-center rounded-xl border bg-card p-4">
-                  <CardPreview
-                    template={template}
-                    student={activeStudent}
-                    school={school}
-                    side={cardSide}
-                    scale={0.88}
-                  />
+          <div className="flex-1 overflow-y-auto p-3 sm:p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+              <div className="lg:col-span-5 space-y-3 sm:space-y-4">
+                <div className="flex items-center justify-center rounded-xl border bg-card p-2 sm:p-4">
+                  <div className="sm:hidden">
+                    <CardPreview
+                      template={template}
+                      student={activeStudent}
+                      school={school}
+                      side={cardSide}
+                      scale={0.7}
+                    />
+                  </div>
+                  <div className="hidden sm:block">
+                    <CardPreview
+                      template={template}
+                      student={activeStudent}
+                      school={school}
+                      side={cardSide}
+                      scale={0.88}
+                    />
+                  </div>
                 </div>
                 <div className="flex justify-center">
                   <CardSideTabs value={cardSide} onChange={setCardSide} />
@@ -218,7 +229,7 @@ export function VerificationDialog({ workflow, template, school, studentsCount }
             </div>
           </div>
 
-          <DialogFooter className="shrink-0 flex-row items-center justify-between gap-4 px-6 py-3 sm:justify-between">
+          <DialogFooter className="shrink-0 flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 px-4 sm:px-6 py-2 sm:py-3 sm:justify-between">
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={goPrev} disabled={isFirst}>
                 <ArrowLeft className="size-4" />

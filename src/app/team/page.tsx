@@ -222,13 +222,19 @@ export default function TeamPage() {
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
       <Header />
 
-      <main className="flex-1 max-w-[1200px] w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+      <main className="flex-1 max-w-[1400px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-4 sm:space-y-6">
         {/* Page header */}
-        <PageHeader title="Team Members" description="Manage who can access this school&apos;s card operations.">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-5">
+          <div className="space-y-2">
+            <h1 className="typo-page-title">Team Members</h1>
+            <p className="typo-body text-muted-foreground">
+              Manage who can access this school&apos;s card operations.
+            </p>
+          </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger
               render={
-                <Button onClick={openAdd}>
+                <Button onClick={openAdd} className="shadow-sm hover:shadow transition-shadow shrink-0">
                   <Plus className="size-4" />
                   Invite member
                 </Button>
@@ -338,28 +344,28 @@ export default function TeamPage() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-        </PageHeader>
+        </div>
 
         {/* Stat cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Total members</CardDescription>
-              <CardTitle className="text-3xl font-bold">{members.length}</CardTitle>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5">
+          <Card className="rounded-xl shadow-sm">
+            <CardHeader className="pb-3">
+              <CardDescription className="typo-meta-label">Total members</CardDescription>
+              <CardTitle className="text-3xl font-extrabold">{members.length}</CardTitle>
             </CardHeader>
           </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Active</CardDescription>
-              <CardTitle className="text-3xl font-bold text-primary">
+          <Card className="rounded-xl shadow-sm">
+            <CardHeader className="pb-3">
+              <CardDescription className="typo-meta-label">Active</CardDescription>
+              <CardTitle className="text-3xl font-extrabold text-primary">
                 {activeCount}
               </CardTitle>
             </CardHeader>
           </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Pending invites</CardDescription>
-              <CardTitle className="text-3xl font-bold">
+          <Card className="rounded-xl shadow-sm">
+            <CardHeader className="pb-3">
+              <CardDescription className="typo-meta-label">Pending invites</CardDescription>
+              <CardTitle className="text-3xl font-extrabold">
                 {members.length - activeCount}
               </CardTitle>
             </CardHeader>
@@ -414,13 +420,13 @@ function MembersTable({
 }) {
   if (members.length === 0) {
     return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-          <Users className="size-8 text-muted-foreground/50" />
-          <p className="mt-3 text-sm font-semibold text-muted-foreground">
-            No members here yet
-          </p>
-          <p className="text-xs text-muted-foreground/70">
+      <Card className="rounded-xl">
+        <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="size-14 rounded-full bg-muted/50 flex items-center justify-center mb-5">
+            <Users className="size-7 text-muted-foreground/60" strokeWidth={1.5} />
+          </div>
+          <p className="typo-card-title">No members here yet</p>
+          <p className="typo-body text-muted-foreground mt-2">
             Invite a team member to get started.
           </p>
         </CardContent>
@@ -429,16 +435,17 @@ function MembersTable({
   }
 
   return (
-    <Card>
+    <Card className="rounded-xl shadow-sm overflow-hidden">
       <CardContent className="p-0">
+        <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Member</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Last active</TableHead>
-              <TableHead className="w-12 text-right">Actions</TableHead>
+              <TableHead className="typo-meta-label">Member</TableHead>
+              <TableHead className="typo-meta-label">Role</TableHead>
+              <TableHead className="typo-meta-label">Status</TableHead>
+              <TableHead className="typo-meta-label">Last active</TableHead>
+              <TableHead className="typo-meta-label w-12 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -446,31 +453,31 @@ function MembersTable({
               <TableRow key={m.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarFallback>{initials(m.name)}</AvatarFallback>
+                    <Avatar className="size-10">
+                      <AvatarFallback className="text-sm font-semibold">{initials(m.name)}</AvatarFallback>
                     </Avatar>
                     <div className="min-w-0">
-                      <p className="font-semibold truncate">{m.name}</p>
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className="font-semibold typo-body truncate">{m.name}</p>
+                      <p className="typo-caption truncate">
                         {m.email}
                       </p>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="inline-flex items-center gap-1.5 text-sm font-medium">
+                  <span className="inline-flex items-center gap-1.5 typo-body-strong">
                     {ROLE_ICON[m.role]}
                     {m.role}
                   </span>
                 </TableCell>
                 <TableCell>
                   {m.status === "active" ? (
-                    <Badge variant="default">Active</Badge>
+                    <Badge variant="default" className="shadow-sm">Active</Badge>
                   ) : (
-                    <Badge variant="secondary">Pending</Badge>
+                    <Badge variant="secondary" className="shadow-sm">Pending</Badge>
                   )}
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
+                <TableCell className="typo-body text-muted-foreground">
                   {m.lastActive}
                 </TableCell>
                 <TableCell className="text-right">
@@ -507,6 +514,7 @@ function MembersTable({
             ))}
           </TableBody>
         </Table>
+        </div>
       </CardContent>
     </Card>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PageHeader } from '@/components/page-header';
+import { Header } from '@/components/Header';
 import { useCarditStore } from '@/lib/store';
 import { FieldType } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +14,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Plus, Trash2, Eye, EyeOff } from 'lucide-react';
 
+/**
+ * Enterprise Schema Builder Page
+ * 
+ * Professional field management interface with:
+ * - typo-page-title for main heading
+ * - Clean table layout with proper spacing
+ * - rounded-xl cards with shadow-sm
+ * - Semantic badge and button usage
+ */
 export default function DynamicSchemaBuilderPage() {
   const { currentSchool, currentDataset, currentDatasetFields, addDatasetField, updateDatasetField, deleteDatasetField } = useCarditStore();
 
@@ -48,46 +57,56 @@ export default function DynamicSchemaBuilderPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
-      <div className="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-8 space-y-6">
-        <PageHeader
-          title="Dynamic Form Schema Builder"
-          description={'Configure dynamic fields per dataset for ' + currentDataset.name + ' (' + currentSchool.name + ')'}
-        />
+      <Header />
+      
+      <main className="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-4 sm:space-y-6">
+        {/* Page Header */}
+        <div className="space-y-2">
+          <h1 className="typo-page-title">Dynamic Form Schema Builder</h1>
+          <p className="typo-body text-muted-foreground">
+            Configure dynamic fields per dataset for {currentDataset.name} ({currentSchool.name})
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+          {/* Fields Table */}
           <div className="lg:col-span-8">
-            <Card>
+            <Card className="rounded-xl shadow-sm">
               <CardHeader>
-                <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                  Active Schema Fields ({currentDatasetFields.length} Fields)
+                <CardTitle className="typo-card-title">
+                  Active Schema Fields
+                  <span className="text-sm font-normal text-muted-foreground ml-2">
+                    ({currentDatasetFields.length} {currentDatasetFields.length === 1 ? 'Field' : 'Fields'})
+                  </span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
+                <div className="overflow-x-auto -mx-4 sm:mx-0">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Order</TableHead>
-                      <TableHead>Field Name</TableHead>
-                      <TableHead>Database Key</TableHead>
-                      <TableHead>Data Type</TableHead>
-                      <TableHead>Required</TableHead>
-                      <TableHead>Visibility</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead className="typo-meta-label">Order</TableHead>
+                      <TableHead className="typo-meta-label">Field Name</TableHead>
+                      <TableHead className="typo-meta-label">Database Key</TableHead>
+                      <TableHead className="typo-meta-label">Data Type</TableHead>
+                      <TableHead className="typo-meta-label">Required</TableHead>
+                      <TableHead className="typo-meta-label">Visibility</TableHead>
+                      <TableHead className="typo-meta-label text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {currentDatasetFields.map((field, idx) => (
                       <TableRow key={field.id}>
-                        <TableCell className="font-mono text-muted-foreground">{idx + 1}</TableCell>
+                        <TableCell className="font-mono text-sm text-muted-foreground">{idx + 1}</TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2 font-semibold">
-                            <span>{field.fieldName}</span>
-                            {field.isSystem && <Badge variant="secondary">System</Badge>}
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold typo-body">{field.fieldName}</span>
+                            {field.isSystem && <Badge variant="secondary" className="shadow-sm">System</Badge>}
                           </div>
                         </TableCell>
-                        <TableCell className="font-mono text-primary font-semibold">{field.fieldKey}</TableCell>
+                        <TableCell className="font-mono text-sm text-primary font-medium">{field.fieldKey}</TableCell>
                         <TableCell>
-                          <Badge variant="outline" className="font-mono">{field.fieldType}</Badge>
+                          <Badge variant="outline" className="font-mono shadow-sm">{field.fieldType}</Badge>
                         </TableCell>
                         <TableCell>
                           <Checkbox
@@ -99,11 +118,11 @@ export default function DynamicSchemaBuilderPage() {
                         <TableCell>
                           <Button
                             variant="ghost"
-                            size="icon"
+                            size="icon-sm"
                             disabled={field.isSystem}
                             onClick={() => updateDatasetField(field.id, { visibility: !field.visibility })}
                           >
-                            {field.visibility ? <Eye className="text-primary" /> : <EyeOff className="text-muted-foreground" />}
+                            {field.visibility ? <Eye className="size-4 text-primary" /> : <EyeOff className="size-4 text-muted-foreground" />}
                           </Button>
                         </TableCell>
                         <TableCell className="text-right">
@@ -113,33 +132,36 @@ export default function DynamicSchemaBuilderPage() {
                               size="icon-sm"
                               onClick={() => deleteDatasetField(field.id)}
                               title="Delete Field"
+                              className="shadow-sm"
                             >
-                              <Trash2 />
+                              <Trash2 className="size-4" />
                             </Button>
                           ) : (
-                            <span className="text-[10px] text-muted-foreground italic">System Field</span>
+                            <span className="typo-caption italic">System Field</span>
                           )}
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
+                </div>
               </CardContent>
             </Card>
           </div>
 
-          <div className="lg:col-span-4">
-            <Card>
+          {/* Add Field Form */}
+          <div className="lg:col-span-4 order-first lg:order-none">
+            <Card className="rounded-xl shadow-sm">
               <CardHeader>
-                <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                  <Plus className="w-4 h-4" />
+                <CardTitle className="typo-card-title flex items-center gap-2">
+                  <Plus className="size-5" />
                   <span>Add Custom Field</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleAddField} className="space-y-4">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="field-label" className="text-xs font-semibold">Field Label *</Label>
+                <form onSubmit={handleAddField} className="space-y-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="field-label" className="typo-meta-label">Field Label *</Label>
                     <Input
                       id="field-label"
                       type="text"
@@ -147,13 +169,14 @@ export default function DynamicSchemaBuilderPage() {
                       placeholder="e.g. Bus Route, House Name, Aadhaar Last 4"
                       value={newFieldName}
                       onChange={(e) => setNewFieldName(e.target.value)}
+                      className="shadow-sm"
                     />
                   </div>
 
-                  <div className="space-y-1.5">
-                    <Label htmlFor="field-type" className="text-xs font-semibold">Field Type *</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="field-type" className="typo-meta-label">Field Type *</Label>
                     <Select value={newFieldType} onValueChange={(v) => setNewFieldType(v as FieldType)}>
-                      <SelectTrigger id="field-type" className="w-full">
+                      <SelectTrigger id="field-type" className="w-full shadow-sm">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -167,25 +190,27 @@ export default function DynamicSchemaBuilderPage() {
                   </div>
 
                   {newFieldType === 'select' && (
-                    <div className="space-y-1.5">
-                      <Label htmlFor="field-options" className="text-xs font-semibold">Dropdown Options (Comma separated)</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="field-options" className="typo-meta-label">Dropdown Options</Label>
                       <Input
                         id="field-options"
                         type="text"
                         placeholder="Red House, Blue House, Green House"
                         value={newOptionsText}
                         onChange={(e) => setNewOptionsText(e.target.value)}
+                        className="shadow-sm"
                       />
+                      <p className="typo-caption">Comma separated values</p>
                     </div>
                   )}
 
-                  <div className="flex items-center gap-2 pt-1">
+                  <div className="flex items-center gap-2.5 pt-1">
                     <Checkbox id="field-required" checked={newIsRequired} onCheckedChange={(c) => setNewIsRequired(!!c)} />
-                    <Label htmlFor="field-required" className="text-xs font-semibold cursor-pointer">Mark Field as Mandatory</Label>
+                    <Label htmlFor="field-required" className="typo-body-strong cursor-pointer">Mark Field as Mandatory</Label>
                   </div>
 
-                  <Button type="submit" variant="default" className="w-full">
-                    <Plus />
+                  <Button type="submit" variant="default" className="w-full shadow-sm hover:shadow transition-shadow">
+                    <Plus className="size-4" />
                     Add Field to Schema
                   </Button>
                 </form>
@@ -193,7 +218,7 @@ export default function DynamicSchemaBuilderPage() {
             </Card>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

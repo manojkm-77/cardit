@@ -1,11 +1,10 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { Header } from '@/components/Header';
 import { CardPreview } from '@/components/CardPreview';
 import { useCarditStore } from '@/lib/store';
 import { CardTemplate, TemplateElement, ElementType } from '@/lib/types';
-import { PageHeader } from '@/components/page-header';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +25,15 @@ import {
   Layers
 } from 'lucide-react';
 
+/**
+ * Enterprise Template Designer Page
+ * 
+ * Professional SaaS builder interface with:
+ * - Three-panel layout: left toolbar, center canvas, right inspector
+ * - typo-page-title and semantic card patterns
+ * - rounded-xl cards with shadow-sm throughout
+ * - Clean accordion-based property inspector
+ */
 export default function TemplateDesignerPage() {
   const { currentSchool, currentTemplate, updateCardTemplate, datasetStudents } = useCarditStore();
   const sampleStudent = datasetStudents[0];
@@ -96,66 +104,88 @@ export default function TemplateDesignerPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
       <Header />
-      <main className="flex-1 w-full max-w-[1600px] mx-auto p-4 sm:p-6 space-y-6">
+      
+      <main className="flex-1 w-full max-w-[1800px] mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-5 sm:space-y-6">
         {/* Top bar */}
-        <PageHeader
-          title="JSON Canvas Template Designer"
-          description={`Editing ${templateState.name} for ${currentSchool.name}`}
-        >
-          <Button variant="outline" size="sm" onClick={() => setJsonView(!jsonView)}>
-            <Code className="size-4" /> {jsonView ? 'Hide Raw JSON' : 'View Raw JSON'}
-          </Button>
-          <Button size="sm" onClick={handleSaveTemplate}>
-            {saveSuccess ? <CheckCircle2 className="size-4" /> : <Save className="size-4" />}
-            {saveSuccess ? 'Saved to DB!' : 'Save Template'}
-          </Button>
-        </PageHeader>
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-5">
+          <div className="space-y-2">
+            <h1 className="typo-page-title">Canvas Template Designer</h1>
+            <p className="typo-body text-muted-foreground">
+              Editing {templateState.name} for {currentSchool.name}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setJsonView(!jsonView)}
+              className="shadow-sm hover:shadow transition-shadow"
+            >
+              <Code className="size-4" /> 
+              {jsonView ? 'Hide JSON' : 'View JSON'}
+            </Button>
+            <Button 
+              size="sm" 
+              onClick={handleSaveTemplate}
+              className="shadow-sm hover:shadow transition-shadow"
+            >
+              {saveSuccess ? <CheckCircle2 className="size-4" /> : <Save className="size-4" />}
+              {saveSuccess ? 'Saved!' : 'Save Template'}
+            </Button>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* LEFT SIDEBAR: Add object palette + layer tree */}
-          <div className="lg:col-span-3 space-y-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm">Add Object</CardTitle>
+        {/* Three-panel layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+          {/* LEFT SIDEBAR */}
+          <div className="lg:col-span-3 space-y-5">
+            <Card className="rounded-xl shadow-sm">
+              <CardHeader className="pb-4">
+                <CardTitle className="typo-card-title">Add Object</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button variant="outline" className="w-full justify-start" onClick={() => handleAddElement('text')}>
-                  <Type className="size-4" /> Text
-                </Button>
-                <Button variant="outline" className="w-full justify-start" onClick={() => handleAddElement('dynamic_field')}>
-                  <Type className="size-4" /> Dynamic Field
-                </Button>
-                <Button variant="outline" className="w-full justify-start" onClick={() => handleAddElement('qr_code')}>
-                  <QrCode className="size-4" /> QR Code
-                </Button>
-                <Button variant="outline" className="w-full justify-start" onClick={() => handleAddElement('barcode')}>
-                  <Barcode className="size-4" /> Barcode
-                </Button>
-                <Button variant="outline" className="w-full justify-start" onClick={() => handleAddElement('shape')}>
-                  <Square className="size-4" /> Shape
-                </Button>
-                <Button variant="outline" className="w-full justify-start" onClick={() => handleAddElement('signature')}>
-                  <FileSignature className="size-4" /> Signature
-                </Button>
+                {[
+                  { type: 'text', icon: Type, label: 'Text' },
+                  { type: 'dynamic_field', icon: Type, label: 'Dynamic Field' },
+                  { type: 'qr_code', icon: QrCode, label: 'QR Code' },
+                  { type: 'barcode', icon: Barcode, label: 'Barcode' },
+                  { type: 'shape', icon: Square, label: 'Shape' },
+                  { type: 'signature', icon: FileSignature, label: 'Signature' }
+                ].map(({ type, icon: Icon, label }) => (
+                  <Button 
+                    key={type}
+                    variant="outline" 
+                    className="w-full justify-start shadow-sm hover:shadow transition-shadow" 
+                    onClick={() => handleAddElement(type as ElementType)}
+                  >
+                    <Icon className="size-4" /> {label}
+                  </Button>
+                ))}
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <Layers className="size-4" /> Canvas Layers ({currentElements.length})
+            <Card className="rounded-xl shadow-sm">
+              <CardHeader className="pb-4">
+                <CardTitle className="typo-card-title flex items-center gap-2">
+                  <Layers className="size-5" /> 
+                  Canvas Layers
+                  <span className="text-sm font-normal text-muted-foreground">({currentElements.length})</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 gap-2 max-h-72 overflow-y-auto">
+                <div className="space-y-2 max-h-80 overflow-y-auto">
                   {currentElements.map((el) => (
                     <button
                       key={el.id}
                       onClick={() => setSelectedElementId(el.id)}
-                      className={`text-left px-3 py-2 rounded-md border text-sm font-medium transition-colors ${selectedElementId === el.id ? 'bg-secondary text-secondary-foreground border-border' : 'bg-background text-muted-foreground hover:bg-muted border-border'}`}
+                      className={`w-full text-left px-3.5 py-3 rounded-lg border typo-body-strong transition-all ${
+                        selectedElementId === el.id 
+                          ? 'bg-secondary text-secondary-foreground border-border shadow-sm' 
+                          : 'bg-background text-muted-foreground hover:bg-muted/50 border-border/60'
+                      }`}
                     >
-                      <span className="truncate">{el.label}</span>
-                      <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">{el.type}</span>
+                      <span className="truncate block">{el.label}</span>
+                      <span className="typo-caption block uppercase">{el.type}</span>
                     </button>
                   ))}
                 </div>
@@ -164,66 +194,114 @@ export default function TemplateDesignerPage() {
           </div>
 
           {/* CANVAS */}
-          <div className="lg:col-span-6">
-            <Card className="p-8 flex flex-col items-center justify-center min-h-[500px] relative">
-              <div className="absolute top-3 left-4 text-xs font-mono text-muted-foreground">
-                Canvas Workspace • Click elements to inspect and update positioning
+          <div className="lg:col-span-6 order-first lg:order-none">
+            <Card className="rounded-xl shadow-sm p-4 sm:p-8 flex flex-col items-center justify-center min-h-[360px] sm:min-h-[500px] relative">
+              <div className="absolute top-3 sm:top-4 left-3 sm:left-5 typo-caption hidden sm:block">
+                Canvas Workspace • Click elements to inspect
               </div>
+              
               {/* Front/Back toggle */}
-              <div className="absolute top-3 right-4 flex items-center bg-muted p-0.5 rounded-lg border border-border">
-                <Button variant={activeSide === 'front' ? 'default' : 'ghost'} size="sm" onClick={() => setActiveSide('front')}>
+              <div className="absolute top-3 sm:top-4 right-3 sm:right-5 flex items-center bg-muted/80 p-0.5 sm:p-1 rounded-lg border border-border shadow-sm">
+                <Button 
+                  variant={activeSide === 'front' ? 'default' : 'ghost'} 
+                  size="sm" 
+                  onClick={() => setActiveSide('front')}
+                  className="shadow-none"
+                >
                   Front
                 </Button>
-                <Button variant={activeSide === 'back' ? 'default' : 'ghost'} size="sm" onClick={() => setActiveSide('back')}>
+                <Button 
+                  variant={activeSide === 'back' ? 'default' : 'ghost'} 
+                  size="sm" 
+                  onClick={() => setActiveSide('back')}
+                  className="shadow-none"
+                >
                   Back
                 </Button>
               </div>
-              <div className="pt-8">
-                <CardPreview
-                  template={templateState}
-                  student={sampleStudent}
-                  school={currentSchool}
-                  side={activeSide}
-                  scale={1.4}
-                  isEditable
-                  selectedElementId={selectedElementId || undefined}
-                  onClickElement={(el) => setSelectedElementId(el.id)}
-                />
+              
+              <div className="pt-10 sm:pt-8">
+                <div className="sm:hidden">
+                  <CardPreview
+                    template={templateState}
+                    student={sampleStudent}
+                    school={currentSchool}
+                    side={activeSide}
+                    scale={0.85}
+                    isEditable
+                    selectedElementId={selectedElementId || undefined}
+                    onClickElement={(el) => setSelectedElementId(el.id)}
+                  />
+                </div>
+                <div className="hidden sm:block lg:hidden">
+                  <CardPreview
+                    template={templateState}
+                    student={sampleStudent}
+                    school={currentSchool}
+                    side={activeSide}
+                    scale={1.2}
+                    isEditable
+                    selectedElementId={selectedElementId || undefined}
+                    onClickElement={(el) => setSelectedElementId(el.id)}
+                  />
+                </div>
+                <div className="hidden lg:block">
+                  <CardPreview
+                    template={templateState}
+                    student={sampleStudent}
+                    school={currentSchool}
+                    side={activeSide}
+                    scale={1.4}
+                    isEditable
+                    selectedElementId={selectedElementId || undefined}
+                    onClickElement={(el) => setSelectedElementId(el.id)}
+                  />
+                </div>
               </div>
             </Card>
           </div>
 
           {/* RIGHT INSPECTOR */}
-          <div className="lg:col-span-3">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm">Element Inspector</CardTitle>
+          <div className="lg:col-span-3 space-y-5">
+            <Card className="rounded-xl shadow-sm">
+              <CardHeader className="pb-4">
+                <CardTitle className="typo-card-title">Element Inspector</CardTitle>
               </CardHeader>
               <CardContent>
                 {selectedElement ? (
-                  <Accordion defaultValue={['properties']}>
+                  <Accordion defaultValue={['properties']} type="multiple">
                     <AccordionItem value="properties">
-                      <AccordionTrigger className="text-sm">Properties</AccordionTrigger>
-                      <AccordionContent className="space-y-4">
-                        <div className="space-y-1.5">
-                          <Label>Label</Label>
-                          <Input value={selectedElement.label} onChange={(e) => updateElement(selectedElement.id, { label: e.target.value })} />
+                      <AccordionTrigger className="typo-body-strong">Properties</AccordionTrigger>
+                      <AccordionContent className="space-y-4 pt-2">
+                        <div className="space-y-2">
+                          <Label className="typo-meta-label">Label</Label>
+                          <Input 
+                            value={selectedElement.label} 
+                            onChange={(e) => updateElement(selectedElement.id, { label: e.target.value })} 
+                            className="shadow-sm"
+                          />
                         </div>
+                        
                         {selectedElement.type === 'text' && (
-                          <div className="space-y-1.5">
-                            <Label>Text Content</Label>
+                          <div className="space-y-2">
+                            <Label className="typo-meta-label">Text Content</Label>
                             <Textarea
                               rows={2}
                               value={selectedElement.content || ''}
                               onChange={(e) => updateElement(selectedElement.id, { content: e.target.value })}
+                              className="shadow-sm"
                             />
                           </div>
                         )}
+                        
                         {selectedElement.type === 'dynamic_field' && (
-                          <div className="space-y-1.5">
-                            <Label>Field Binding</Label>
-                            <Select value={selectedElement.fieldKey || 'name'} onValueChange={(v) => updateElement(selectedElement.id, { fieldKey: v ?? undefined })}>
-                              <SelectTrigger className="w-full">
+                          <div className="space-y-2">
+                            <Label className="typo-meta-label">Field Binding</Label>
+                            <Select 
+                              value={selectedElement.fieldKey || 'name'} 
+                              onValueChange={(v) => updateElement(selectedElement.id, { fieldKey: v ?? undefined })}
+                            >
+                              <SelectTrigger className="w-full shadow-sm">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -239,50 +317,83 @@ export default function TemplateDesignerPage() {
                             </Select>
                           </div>
                         )}
+                        
                         <div className="grid grid-cols-2 gap-3">
-                          <div className="space-y-1.5">
-                            <Label>X Pos (%)</Label>
-                            <Input type="number" value={selectedElement.x} onChange={(e) => updateElement(selectedElement.id, { x: Number(e.target.value) })} />
+                          <div className="space-y-2">
+                            <Label className="typo-meta-label">X Pos (%)</Label>
+                            <Input 
+                              type="number" 
+                              value={selectedElement.x} 
+                              onChange={(e) => updateElement(selectedElement.id, { x: Number(e.target.value) })} 
+                              className="shadow-sm"
+                            />
                           </div>
-                          <div className="space-y-1.5">
-                            <Label>Y Pos (%)</Label>
-                            <Input type="number" value={selectedElement.y} onChange={(e) => updateElement(selectedElement.id, { y: Number(e.target.value) })} />
+                          <div className="space-y-2">
+                            <Label className="typo-meta-label">Y Pos (%)</Label>
+                            <Input 
+                              type="number" 
+                              value={selectedElement.y} 
+                              onChange={(e) => updateElement(selectedElement.id, { y: Number(e.target.value) })} 
+                              className="shadow-sm"
+                            />
                           </div>
                         </div>
                       </AccordionContent>
                     </AccordionItem>
+                    
                     <AccordionItem value="advanced">
-                      <AccordionTrigger className="text-sm">Position & Size</AccordionTrigger>
-                      <AccordionContent className="space-y-3">
+                      <AccordionTrigger className="typo-body-strong">Position & Size</AccordionTrigger>
+                      <AccordionContent className="space-y-4 pt-2">
                         <div className="grid grid-cols-2 gap-3">
-                          <div className="space-y-1.5">
-                            <Label>Width (%)</Label>
-                            <Input type="number" value={selectedElement.width} onChange={(e) => updateElement(selectedElement.id, { width: Number(e.target.value) })} />
+                          <div className="space-y-2">
+                            <Label className="typo-meta-label">Width (%)</Label>
+                            <Input 
+                              type="number" 
+                              value={selectedElement.width} 
+                              onChange={(e) => updateElement(selectedElement.id, { width: Number(e.target.value) })} 
+                              className="shadow-sm"
+                            />
                           </div>
-                          <div className="space-y-1.5">
-                            <Label>Height (%)</Label>
-                            <Input type="number" value={selectedElement.height} onChange={(e) => updateElement(selectedElement.id, { height: Number(e.target.value) })} />
+                          <div className="space-y-2">
+                            <Label className="typo-meta-label">Height (%)</Label>
+                            <Input 
+                              type="number" 
+                              value={selectedElement.height} 
+                              onChange={(e) => updateElement(selectedElement.id, { height: Number(e.target.value) })} 
+                              className="shadow-sm"
+                            />
                           </div>
                         </div>
-                        <div className="space-y-1.5">
-                          <Label>Font Size</Label>
-                          <Input type="number" value={selectedElement.fontSize || 10} onChange={(e) => updateElement(selectedElement.id, { fontSize: Number(e.target.value) })} />
+                        <div className="space-y-2">
+                          <Label className="typo-meta-label">Font Size</Label>
+                          <Input 
+                            type="number" 
+                            value={selectedElement.fontSize || 10} 
+                            onChange={(e) => updateElement(selectedElement.id, { fontSize: Number(e.target.value) })} 
+                            className="shadow-sm"
+                          />
                         </div>
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
                 ) : (
-                  <div className="text-center py-12 text-sm text-muted-foreground">
-                    Select an object on the canvas or layer list to inspect properties.
+                  <div className="text-center py-16">
+                    <p className="typo-body text-muted-foreground">
+                      Select an object on the canvas or layer list to inspect properties.
+                    </p>
                   </div>
                 )}
               </CardContent>
             </Card>
 
             {selectedElement && (
-              <Card className="mt-4 border-destructive/30">
-                <CardContent className="p-4">
-                  <Button variant="destructive" className="w-full" onClick={() => handleDeleteElement(selectedElement.id)}>
+              <Card className="rounded-xl border-destructive/30 shadow-sm">
+                <CardContent className="p-5">
+                  <Button 
+                    variant="destructive" 
+                    className="w-full shadow-sm hover:shadow transition-shadow" 
+                    onClick={() => handleDeleteElement(selectedElement.id)}
+                  >
                     <Trash2 className="size-4" /> Delete Object
                   </Button>
                 </CardContent>
@@ -291,18 +402,20 @@ export default function TemplateDesignerPage() {
           </div>
         </div>
 
+        {/* JSON View */}
         {jsonView && (
-          <Card className="p-6 font-mono">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-3">
-              Raw Template Canvas JSON Schema
-            </h3>
-            <pre className="bg-muted/50 p-4 rounded-lg text-xs text-foreground overflow-x-auto max-h-96">
-              {JSON.stringify(templateState, null, 2)}
-            </pre>
+          <Card className="rounded-xl shadow-sm">
+            <CardContent className="p-6 font-mono">
+              <h3 className="typo-card-title mb-4">
+                Raw Template Canvas JSON Schema
+              </h3>
+              <pre className="bg-muted/50 p-5 rounded-lg text-xs text-foreground overflow-x-auto max-h-96 border border-border/60">
+                {JSON.stringify(templateState, null, 2)}
+              </pre>
+            </CardContent>
           </Card>
         )}
       </main>
     </div>
   );
 }
-

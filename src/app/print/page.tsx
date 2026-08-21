@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Sparkles, Download, RefreshCw } from 'lucide-react';
+import { Header } from '@/components/Header';
 
 export default function PrintSheetGeneratorPage() {
   const { currentSchool, currentDataset, currentTemplate, datasetStudents, enqueueJob } = useCarditStore();
@@ -46,26 +47,27 @@ export default function PrintSheetGeneratorPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
-      <div className="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-8 space-y-6">
+      <Header />
+      <div className="flex-1 max-w-[1600px] w-full mx-auto p-3 sm:p-8 space-y-4 sm:space-y-6">
         <PageHeader
           title="Commercial Print Sheet Generator"
           description="Duplex printable sheets with crop marks (+), registration targets (⊕), 3mm bleed & 2mm safe zone line"
         >
-          <div className="flex items-center gap-2">
-            <Button variant={paperSize === 'A4' ? 'default' : 'outline'} size="sm" onClick={() => setPaperSize('A4')}>
-              A4 (5-up Sheet)
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant={paperSize === 'A4' ? 'default' : 'outline'} size="sm" onClick={() => setPaperSize('A4')} className="text-xs sm:text-sm">
+              A4 (5-up)
             </Button>
-            <Button variant={paperSize === 'A3' ? 'default' : 'outline'} size="sm" onClick={() => setPaperSize('A3')}>
-              A3 (12-up Sheet)
+            <Button variant={paperSize === 'A3' ? 'default' : 'outline'} size="sm" onClick={() => setPaperSize('A3')} className="text-xs sm:text-sm">
+              A3 (12-up)
             </Button>
           </div>
-          <Button size="sm" onClick={handleGeneratePDF} disabled={isGenerating}>
+          <Button size="sm" onClick={handleGeneratePDF} disabled={isGenerating} className="text-xs sm:text-sm">
             {isGenerating ? <RefreshCw className="animate-spin" /> : <Sparkles />}
-            {isGenerating ? 'Rendering PDF Jobs...' : `Generate ${paperSize} Print PDFs`}
+            {isGenerating ? 'Rendering...' : `Generate ${paperSize} PDFs`}
           </Button>
         </PageHeader>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
           <div className="lg:col-span-8">
             <Card>
               <CardHeader>
@@ -75,12 +77,12 @@ export default function PrintSheetGeneratorPage() {
                     <span className="mx-1">• Page 1 of {totalSheets}</span>
                     <span>({cardsPerPage} cards per page)</span>
                   </CardTitle>
-                  <div className="flex items-center gap-2">
-                    <Button variant={sheetSide === 'front' ? 'default' : 'outline'} size="sm" onClick={() => setSheetSide('front')}>
-                      Front Side ({paperSize}_FRONT.pdf)
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Button variant={sheetSide === 'front' ? 'default' : 'outline'} size="sm" onClick={() => setSheetSide('front')} className="text-xs sm:text-sm">
+                      Front ({paperSize})
                     </Button>
-                    <Button variant={sheetSide === 'back' ? 'default' : 'outline'} size="sm" onClick={() => setSheetSide('back')}>
-                      Back Side ({paperSize}_BACK.pdf)
+                    <Button variant={sheetSide === 'back' ? 'default' : 'outline'} size="sm" onClick={() => setSheetSide('back')} className="text-xs sm:text-sm">
+                      Back ({paperSize})
                     </Button>
                   </div>
                 </div>
@@ -101,7 +103,7 @@ export default function PrintSheetGeneratorPage() {
                     <span>JOB: {paperSize}_{sheetSide.toUpperCase()}_SHEET_1.PDF</span>
                   </div>
 
-                  <div className={`grid gap-6 ${paperSize === 'A4' ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                  <div className={`grid gap-4 sm:gap-6 ${paperSize === 'A4' ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-2 sm:grid-cols-3'}`}>
                     {sampleSheetStudents.map((student, idx) => (
                       <div key={student.id} className="relative">
                         {showCropMarks && (
@@ -118,7 +120,7 @@ export default function PrintSheetGeneratorPage() {
                           student={student}
                           school={currentSchool}
                           side={sheetSide}
-                          scale={paperSize === 'A4' ? 0.72 : 0.58}
+                          scale={paperSize === 'A4' ? 0.62 : 0.48}
                           showBleed={showBleed}
                         />
 
