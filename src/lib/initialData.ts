@@ -1,0 +1,783 @@
+﻿import { School, AcademicYear, Dataset, DatasetField, Student, CardTemplate, AuditLog, User, JobQueueItem } from './types';
+
+export const INITIAL_SCHOOLS: School[] = [
+  {
+    id: 'school-gkb',
+    name: 'GKB International School',
+    code: 'GKB',
+    logoUrl: 'https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=150&auto=format&fit=crop&q=80',
+    address: '124 Academic Enclave, Knowledge Park, New Delhi - 110001',
+    phone: '+91 98765 43210',
+    email: 'info@gkbinternational.edu',
+    website: 'https://gkbinternational.edu'
+  },
+  {
+    id: 'school-sxa',
+    name: "St. Xavier's Academy",
+    code: 'SXA',
+    logoUrl: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=150&auto=format&fit=crop&q=80',
+    address: '88 Cathedral Road, Heritage Zone, Mumbai - 400001',
+    phone: '+91 98111 22233',
+    email: 'admin@stxaviers.edu',
+    website: 'https://stxaviers.edu'
+  }
+];
+
+export const INITIAL_ACADEMIC_YEARS: AcademicYear[] = [
+  {
+    id: 'ay-2026',
+    schoolId: 'school-gkb',
+    name: '2026-27',
+    isCurrent: true,
+    startDate: '2026-04-01',
+    endDate: '2027-03-31'
+  },
+  {
+    id: 'ay-2025',
+    schoolId: 'school-gkb',
+    name: '2025-26',
+    isCurrent: false,
+    startDate: '2025-04-01',
+    endDate: '2026-03-31'
+  }
+];
+
+export const INITIAL_DATASETS: Dataset[] = [
+  {
+    id: 'ds-c1',
+    schoolId: 'school-gkb',
+    academicYearId: 'ay-2026',
+    name: 'Class 1 Dataset',
+    code: 'GKB-2026-C1',
+    status: 'draft',
+    totalStudents: 242,
+    verifiedCount: 198,
+    printedCount: 45,
+    isMerged: true,
+    excelUploaded: true,
+    photosUploaded: true,
+    createdAt: '2026-04-10',
+    updatedAt: '2026-08-19'
+  },
+  {
+    id: 'ds-c2',
+    schoolId: 'school-gkb',
+    academicYearId: 'ay-2026',
+    name: 'Class 2 Dataset',
+    code: 'GKB-2026-C2',
+    status: 'draft',
+    totalStudents: 215,
+    verifiedCount: 180,
+    printedCount: 0,
+    isMerged: false,
+    excelUploaded: true,
+    photosUploaded: false,
+    createdAt: '2026-04-11',
+    updatedAt: '2026-08-18'
+  },
+  {
+    id: 'ds-lkg',
+    schoolId: 'school-gkb',
+    academicYearId: 'ay-2026',
+    name: 'LKG Dataset',
+    code: 'GKB-2026-LKG',
+    status: 'draft',
+    totalStudents: 180,
+    verifiedCount: 150,
+    printedCount: 150,
+    isMerged: true,
+    excelUploaded: true,
+    photosUploaded: true,
+    createdAt: '2026-04-05',
+    updatedAt: '2026-08-15'
+  },
+  {
+    id: 'ds-ukg',
+    schoolId: 'school-gkb',
+    academicYearId: 'ay-2026',
+    name: 'UKG Dataset',
+    code: 'GKB-2026-UKG',
+    status: 'draft',
+    totalStudents: 190,
+    verifiedCount: 175,
+    printedCount: 120,
+    isMerged: true,
+    excelUploaded: true,
+    photosUploaded: true,
+    createdAt: '2026-04-06',
+    updatedAt: '2026-08-16'
+  },
+  {
+    id: 'ds-c10',
+    schoolId: 'school-gkb',
+    academicYearId: 'ay-2026',
+    name: 'Class 10th Dataset',
+    code: 'GKB-2026-C10',
+    status: 'locked',
+    totalStudents: 210,
+    verifiedCount: 210,
+    printedCount: 210,
+    isMerged: true,
+    excelUploaded: true,
+    photosUploaded: true,
+    createdAt: '2026-04-01',
+    updatedAt: '2026-07-20'
+  },
+  {
+    id: 'ds-staff',
+    schoolId: 'school-gkb',
+    academicYearId: 'ay-2026',
+    name: 'Staff Dataset',
+    code: 'GKB-2026-STAFF',
+    status: 'draft',
+    totalStudents: 45,
+    verifiedCount: 42,
+    printedCount: 40,
+    isMerged: true,
+    excelUploaded: true,
+    photosUploaded: true,
+    createdAt: '2026-04-02',
+    updatedAt: '2026-08-12'
+  }
+];
+
+export const INITIAL_DATASET_FIELDS: DatasetField[] = [
+  { id: 'f-1', datasetId: 'ds-c1', fieldName: 'Student Name', fieldKey: 'name', fieldType: 'text', isRequired: true, isSystem: true, visibility: true, sortOrder: 1 },
+  { id: 'f-2', datasetId: 'ds-c1', fieldName: 'Admission No', fieldKey: 'admissionNo', fieldType: 'text', isRequired: true, isSystem: true, visibility: true, sortOrder: 2 },
+  { id: 'f-3', datasetId: 'ds-c1', fieldName: 'Class & Sec', fieldKey: 'className', fieldType: 'text', isRequired: true, isSystem: true, visibility: true, sortOrder: 3 },
+  { id: 'f-4', datasetId: 'ds-c1', fieldName: 'Father Name', fieldKey: 'fatherName', fieldType: 'text', isRequired: true, isSystem: false, visibility: true, sortOrder: 4 },
+  { id: 'f-5', datasetId: 'ds-c1', fieldName: 'Mother Name', fieldKey: 'motherName', fieldType: 'text', isRequired: false, isSystem: false, visibility: true, sortOrder: 5 },
+  { id: 'f-6', datasetId: 'ds-c1', fieldName: 'Date of Birth', fieldKey: 'dob', fieldType: 'date', isRequired: true, isSystem: false, visibility: true, sortOrder: 6 },
+  { id: 'f-7', datasetId: 'ds-c1', fieldName: 'Blood Group', fieldKey: 'bloodGroup', fieldType: 'select', isRequired: true, isSystem: false, visibility: true, sortOrder: 7, options: ['A+', 'B+', 'O+', 'AB+', 'A-', 'B-', 'O-', 'AB-'] },
+  { id: 'f-8', datasetId: 'ds-c1', fieldName: 'Bus Route No', fieldKey: 'busRoute', fieldType: 'text', isRequired: false, isSystem: false, visibility: true, sortOrder: 8 },
+  { id: 'f-9', datasetId: 'ds-c1', fieldName: 'Aadhaar Number', fieldKey: 'aadhaar', fieldType: 'text', isRequired: false, isSystem: false, visibility: true, sortOrder: 9 },
+  { id: 'f-10', datasetId: 'ds-c1', fieldName: 'Parent Phone', fieldKey: 'mobile', fieldType: 'phone', isRequired: true, isSystem: false, visibility: true, sortOrder: 10 },
+  { id: 'f-11', datasetId: 'ds-c1', fieldName: 'Emergency Phone', fieldKey: 'emergencyPhone', fieldType: 'phone', isRequired: false, isSystem: false, visibility: true, sortOrder: 11 },
+  { id: 'f-12', datasetId: 'ds-c1', fieldName: 'Residential Address', fieldKey: 'address', fieldType: 'text', isRequired: true, isSystem: false, visibility: true, sortOrder: 12 },
+  { id: 'f-13', datasetId: 'ds-c1', fieldName: 'House Category', fieldKey: 'houseCategory', fieldType: 'select', isRequired: false, isSystem: false, visibility: true, sortOrder: 13, options: ['Red House', 'Blue House', 'Green House', 'Yellow House'] }
+];
+
+export const INITIAL_STUDENTS: Student[] = [
+  {
+    id: 'std-101',
+    datasetId: 'ds-c1',
+    admissionNo: 'GKB-2026-0101',
+    name: 'Aarav Sharma',
+    fatherName: 'Rajesh Sharma',
+    className: 'Class 1-A',
+    section: 'A',
+    photoUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=300&auto=format&fit=crop&q=80',
+    originalPhotoUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=300&auto=format&fit=crop&q=80',
+    photoMatched: true,
+    photoCropped: true,
+    status: 'Verified',
+    qrUuid: 'a8b1c2d3-1001-4000-8000-000000000101',
+    dynamicData: {
+      motherName: 'Sunita Sharma',
+      dob: '2020-05-14',
+      bloodGroup: 'B+',
+      busRoute: 'Route #12 (Civil Lines)',
+      aadhaar: '4589-1234-5678',
+      mobile: '+91 98765 11111',
+      emergencyPhone: '+91 98765 22222',
+      address: 'H-42, Sector 15, Vasundhara, New Delhi',
+      houseCategory: 'Red House'
+    },
+    createdAt: '2026-04-12',
+    updatedAt: '2026-08-19'
+  },
+  {
+    id: 'std-102',
+    datasetId: 'ds-c1',
+    admissionNo: 'GKB-2026-0102',
+    name: 'Ananya Verma',
+    fatherName: 'Vikram Verma',
+    className: 'Class 1-A',
+    section: 'A',
+    photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&auto=format&fit=crop&q=80',
+    photoMatched: true,
+    photoCropped: true,
+    status: 'Approved',
+    qrUuid: 'a8b1c2d3-1001-4000-8000-000000000102',
+    dynamicData: {
+      motherName: 'Pooja Verma',
+      dob: '2020-08-22',
+      bloodGroup: 'O+',
+      busRoute: 'Route #08 (Preet Vihar)',
+      aadhaar: '7741-9982-1209',
+      mobile: '+91 98112 33445',
+      emergencyPhone: '+91 98112 55667',
+      address: 'B-104, Green Park Apartments, New Delhi',
+      houseCategory: 'Blue House'
+    },
+    createdAt: '2026-04-12',
+    updatedAt: '2026-08-19'
+  },
+  {
+    id: 'std-103',
+    datasetId: 'ds-c1',
+    admissionNo: 'GKB-2026-0103',
+    name: 'Rohan Gupta',
+    fatherName: 'Amit Gupta',
+    className: 'Class 1-A',
+    section: 'A',
+    photoUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=300&auto=format&fit=crop&q=80',
+    photoMatched: true,
+    photoCropped: true,
+    status: 'Pending',
+    qrUuid: 'a8b1c2d3-1001-4000-8000-000000000103',
+    dynamicData: {
+      motherName: 'Neha Gupta',
+      dob: '2020-03-10',
+      bloodGroup: 'A+',
+      busRoute: 'Route #05 (Mayur Vihar)',
+      aadhaar: '3321-4455-6677',
+      mobile: '+91 98990 88776',
+      emergencyPhone: '+91 98990 11223',
+      address: 'Flat 302, Royal Residency, New Delhi',
+      houseCategory: 'Green House'
+    },
+    createdAt: '2026-04-12',
+    updatedAt: '2026-08-19'
+  },
+  {
+    id: 'std-104',
+    datasetId: 'ds-c1',
+    admissionNo: 'GKB-2026-0104',
+    name: 'Diya Patel',
+    fatherName: 'Sanjay Patel',
+    className: 'Class 1-B',
+    section: 'B',
+    photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
+    photoMatched: true,
+    photoCropped: true,
+    status: 'Printed',
+    qrUuid: 'a8b1c2d3-1001-4000-8000-000000000104',
+    dynamicData: {
+      motherName: 'Sheetal Patel',
+      dob: '2020-11-05',
+      bloodGroup: 'AB+',
+      busRoute: 'Self Transport',
+      aadhaar: '9988-7766-5544',
+      mobile: '+91 97110 44332',
+      emergencyPhone: '+91 97110 55443',
+      address: 'Villa 12, Rosewood Estates, Noida',
+      houseCategory: 'Yellow House'
+    },
+    createdAt: '2026-04-12',
+    updatedAt: '2026-08-19'
+  },
+  {
+    id: 'std-105',
+    datasetId: 'ds-c1',
+    admissionNo: 'GKB-2026-0105',
+    name: 'Kabir Singh',
+    fatherName: 'Harpreet Singh',
+    className: 'Class 1-B',
+    section: 'B',
+    photoUrl: '', // No photo
+    photoMatched: false,
+    photoCropped: false,
+    status: 'Pending',
+    qrUuid: 'a8b1c2d3-1001-4000-8000-000000000105',
+    dynamicData: {
+      motherName: 'Gurpreet Kaur',
+      dob: '2020-01-30',
+      bloodGroup: 'O-',
+      busRoute: 'Route #12 (Civil Lines)',
+      aadhaar: '',
+      mobile: '+91 98450 66778',
+      emergencyPhone: '',
+      address: '22 G.T. Road, Model Town, New Delhi',
+      houseCategory: 'Red House'
+    },
+    createdAt: '2026-04-12',
+    updatedAt: '2026-08-19'
+  },
+  {
+    id: 'std-106',
+    datasetId: 'ds-c1',
+    admissionNo: 'GKB-2026-0106',
+    name: 'Myra Malhotra',
+    fatherName: 'Karan Malhotra',
+    className: 'Class 1-B',
+    section: 'B',
+    photoUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&auto=format&fit=crop&q=80',
+    photoMatched: true,
+    photoCropped: true,
+    status: 'Verified',
+    qrUuid: 'a8b1c2d3-1001-4000-8000-000000000106',
+    dynamicData: {
+      motherName: 'Ritu Malhotra',
+      dob: '2020-07-19',
+      bloodGroup: 'B+',
+      busRoute: 'Route #03 (Lajpat Nagar)',
+      aadhaar: '6655-4433-2211',
+      mobile: '+91 99100 88990',
+      emergencyPhone: '+91 99100 77889',
+      address: 'C-15, Defence Colony, New Delhi',
+      houseCategory: 'Blue House'
+    },
+    createdAt: '2026-04-12',
+    updatedAt: '2026-08-19'
+  },
+  {
+    id: 'std-107',
+    datasetId: 'ds-c1',
+    admissionNo: 'GKB-2026-0107',
+    name: 'Vivaan Reddy',
+    fatherName: 'Suresh Reddy',
+    className: 'Class 1-C',
+    section: 'C',
+    photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
+    photoMatched: true,
+    photoCropped: true,
+    status: 'Rejected',
+    rejectionReason: 'Blurry photo & missing blood group detail',
+    qrUuid: 'a8b1c2d3-1001-4000-8000-000000000107',
+    dynamicData: {
+      motherName: 'Lakshmi Reddy',
+      dob: '2020-04-12',
+      bloodGroup: '',
+      busRoute: 'Route #09 (Indirapuram)',
+      aadhaar: '4433-2211-0099',
+      mobile: '+91 98888 12345',
+      emergencyPhone: '',
+      address: 'Plot 88, Nyay Khand, Ghaziabad',
+      houseCategory: 'Green House'
+    },
+    createdAt: '2026-04-12',
+    updatedAt: '2026-08-19'
+  },
+  {
+    id: 'std-108',
+    datasetId: 'ds-c1',
+    admissionNo: 'GKB-2026-0108',
+    name: 'Ishaan Deshmukh',
+    fatherName: 'Prakash Deshmukh',
+    className: 'Class 1-C',
+    section: 'C',
+    photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&auto=format&fit=crop&q=80',
+    photoMatched: true,
+    photoCropped: true,
+    status: 'Verified',
+    qrUuid: 'a8b1c2d3-1001-4000-8000-000000000108',
+    dynamicData: {
+      motherName: 'Sunanda Deshmukh',
+      dob: '2020-09-01',
+      bloodGroup: 'A+',
+      busRoute: 'Route #12 (Civil Lines)',
+      aadhaar: '1122-3344-5566',
+      mobile: '+91 98777 66554',
+      emergencyPhone: '+91 98777 44332',
+      address: '15 Civil Lines, Near Stadium, New Delhi',
+      houseCategory: 'Yellow House'
+    },
+    createdAt: '2026-04-12',
+    updatedAt: '2026-08-19'
+  }
+];
+
+export const INITIAL_CARD_TEMPLATES: CardTemplate[] = [
+  {
+    id: 'tmpl-gkb-std',
+    schoolId: 'school-gkb',
+    name: 'GKB Standard Student ID Card (2026-27)',
+    type: 'ID Card',
+    widthMm: 85.6,
+    heightMm: 53.9,
+    orientation: 'landscape',
+    bgFrontColor: '#1e1b4b', // deep indigo/navy canvas
+    bgBackColor: '#0f172a',
+    accentColor: '#6366f1',
+    isDefault: true,
+    frontElements: [
+      {
+        id: 'el-header-bg',
+        type: 'shape',
+        label: 'Header Banner',
+        x: 0,
+        y: 0,
+        width: 100,
+        height: 22,
+        backgroundColor: '#312e81',
+        zIndex: 1
+      },
+      {
+        id: 'el-logo',
+        type: 'logo',
+        label: 'School Logo',
+        x: 3,
+        y: 2,
+        width: 18,
+        height: 18,
+        borderRadius: 4,
+        zIndex: 10
+      },
+      {
+        id: 'el-school-name',
+        type: 'text',
+        label: 'School Name',
+        content: 'GKB INTERNATIONAL SCHOOL',
+        x: 23,
+        y: 3,
+        width: 74,
+        height: 10,
+        fontSize: 14,
+        fontColor: '#ffffff',
+        fontFamily: 'Inter',
+        fontWeight: '800',
+        align: 'left',
+        zIndex: 10
+      },
+      {
+        id: 'el-school-tag',
+        type: 'text',
+        label: 'Academic Year Tag',
+        content: 'STUDENT IDENTITY CARD â€¢ 2026-27',
+        x: 23,
+        y: 14,
+        width: 74,
+        height: 6,
+        fontSize: 8,
+        fontColor: '#a5b4fc',
+        fontFamily: 'Inter',
+        fontWeight: '600',
+        align: 'left',
+        zIndex: 10
+      },
+      {
+        id: 'el-photo',
+        type: 'photo',
+        label: 'Student Photo',
+        x: 4,
+        y: 26,
+        width: 28,
+        height: 48,
+        borderRadius: 8,
+        strokeColor: '#6366f1',
+        strokeWidth: 2,
+        zIndex: 10
+      },
+      {
+        id: 'el-name',
+        type: 'dynamic_field',
+        label: 'Student Name',
+        fieldKey: 'name',
+        x: 35,
+        y: 26,
+        width: 61,
+        height: 10,
+        fontSize: 15,
+        fontColor: '#ffffff',
+        fontFamily: 'Inter',
+        fontWeight: '800',
+        align: 'left',
+        zIndex: 10
+      },
+      {
+        id: 'el-class-badge',
+        type: 'dynamic_field',
+        label: 'Class & Section',
+        fieldKey: 'className',
+        x: 35,
+        y: 37,
+        width: 32,
+        height: 8,
+        fontSize: 10,
+        fontColor: '#38bdf8',
+        fontFamily: 'Inter',
+        fontWeight: '700',
+        align: 'left',
+        zIndex: 10
+      },
+      {
+        id: 'el-adm-no',
+        type: 'dynamic_field',
+        label: 'Admission No',
+        fieldKey: 'admissionNo',
+        x: 35,
+        y: 47,
+        width: 61,
+        height: 7,
+        fontSize: 9,
+        fontColor: '#cbd5e1',
+        fontFamily: 'Inter',
+        fontWeight: '600',
+        align: 'left',
+        zIndex: 10
+      },
+      {
+        id: 'el-father',
+        type: 'dynamic_field',
+        label: 'Father Name',
+        fieldKey: 'fatherName',
+        x: 35,
+        y: 55,
+        width: 61,
+        height: 7,
+        fontSize: 8.5,
+        fontColor: '#94a3b8',
+        fontFamily: 'Inter',
+        fontWeight: '500',
+        align: 'left',
+        zIndex: 10
+      },
+      {
+        id: 'el-dob',
+        type: 'dynamic_field',
+        label: 'Date of Birth',
+        fieldKey: 'dob',
+        x: 35,
+        y: 63,
+        width: 30,
+        height: 7,
+        fontSize: 8,
+        fontColor: '#94a3b8',
+        fontFamily: 'Inter',
+        fontWeight: '500',
+        align: 'left',
+        zIndex: 10
+      },
+      {
+        id: 'el-blood',
+        type: 'dynamic_field',
+        label: 'Blood Group',
+        fieldKey: 'bloodGroup',
+        x: 68,
+        y: 63,
+        width: 28,
+        height: 7,
+        fontSize: 8,
+        fontColor: '#f87171',
+        fontFamily: 'Inter',
+        fontWeight: '700',
+        align: 'left',
+        zIndex: 10
+      },
+      {
+        id: 'el-mobile',
+        type: 'dynamic_field',
+        label: 'Mobile',
+        fieldKey: 'mobile',
+        x: 35,
+        y: 71,
+        width: 61,
+        height: 7,
+        fontSize: 8,
+        fontColor: '#94a3b8',
+        fontFamily: 'Inter',
+        fontWeight: '500',
+        align: 'left',
+        zIndex: 10
+      },
+      {
+        id: 'el-qr',
+        type: 'qr_code',
+        label: 'Verification QR',
+        x: 77,
+        y: 75,
+        width: 19,
+        height: 22,
+        backgroundColor: '#ffffff',
+        zIndex: 10
+      },
+      {
+        id: 'el-sig-line',
+        type: 'signature',
+        label: 'Principal Signature',
+        content: 'Principal Sign',
+        x: 4,
+        y: 79,
+        width: 28,
+        height: 16,
+        fontSize: 7,
+        fontColor: '#64748b',
+        align: 'center',
+        zIndex: 10
+      },
+      {
+        id: 'el-footer-strip',
+        type: 'shape',
+        label: 'Footer Accent',
+        x: 0,
+        y: 97,
+        width: 100,
+        height: 3,
+        backgroundColor: '#6366f1',
+        zIndex: 5
+      }
+    ],
+    backElements: [
+      {
+        id: 'el-b-header',
+        type: 'text',
+        label: 'Back Header',
+        content: 'TERMS & INSTRUCTIONS',
+        x: 5,
+        y: 6,
+        width: 90,
+        height: 8,
+        fontSize: 10,
+        fontColor: '#818cf8',
+        fontWeight: '700',
+        align: 'center',
+        zIndex: 10
+      },
+      {
+        id: 'el-b-terms',
+        type: 'text',
+        label: 'Terms Text',
+        content: '1. This identity card must be displayed at all times on campus.\n2. In case of loss, report immediately to school administration.\n3. Non-transferable and property of GKB International School.',
+        x: 6,
+        y: 18,
+        width: 88,
+        height: 24,
+        fontSize: 7.5,
+        fontColor: '#cbd5e1',
+        align: 'left',
+        zIndex: 10
+      },
+      {
+        id: 'el-b-addr',
+        type: 'dynamic_field',
+        label: 'Student Address',
+        fieldKey: 'address',
+        x: 6,
+        y: 45,
+        width: 88,
+        height: 16,
+        fontSize: 7.5,
+        fontColor: '#e2e8f0',
+        fontWeight: '500',
+        align: 'left',
+        zIndex: 10
+      },
+      {
+        id: 'el-b-emerg',
+        type: 'dynamic_field',
+        label: 'Emergency Phone',
+        fieldKey: 'emergencyPhone',
+        x: 6,
+        y: 63,
+        width: 50,
+        height: 8,
+        fontSize: 8,
+        fontColor: '#f87171',
+        fontWeight: '600',
+        align: 'left',
+        zIndex: 10
+      },
+      {
+        id: 'el-b-barcode',
+        type: 'barcode',
+        label: 'Admission Barcode',
+        x: 10,
+        y: 75,
+        width: 80,
+        height: 18,
+        zIndex: 10
+      }
+    ]
+  }
+];
+
+export const INITIAL_AUDIT_LOGS: AuditLog[] = [
+  {
+    id: 'log-1',
+    schoolId: 'school-gkb',
+    userName: 'Vikram Singh',
+    userRole: 'School Admin',
+    action: 'VERIFY_ALL',
+    entity: 'Dataset',
+    entityId: 'ds-c1',
+    details: 'Verified 198 student records in Class 1 Dataset',
+    ipAddress: '192.168.1.104',
+    timestamp: '2026-08-19T14:32:00Z'
+  },
+  {
+    id: 'log-2',
+    schoolId: 'school-gkb',
+    userName: 'Anjali Mehra',
+    userRole: 'Verifier',
+    action: 'APPROVE_STUDENT',
+    entity: 'Student',
+    entityId: 'std-102',
+    details: 'Approved card generation for student Ananya Verma (GKB-2026-0102)',
+    oldValue: 'Verified',
+    newValue: 'Approved',
+    ipAddress: '192.168.1.112',
+    timestamp: '2026-08-19T15:10:12Z'
+  },
+  {
+    id: 'log-3',
+    schoolId: 'school-gkb',
+    userName: 'Rajesh Kumar',
+    userRole: 'Data Entry Operator',
+    action: 'UPDATE_STUDENT',
+    entity: 'Student',
+    entityId: 'std-101',
+    details: 'Updated blood group from A+ to B+ for Aarav Sharma',
+    oldValue: 'A+',
+    newValue: 'B+',
+    ipAddress: '192.168.1.145',
+    timestamp: '2026-08-19T16:05:44Z'
+  }
+];
+
+export const INITIAL_USERS: User[] = [
+  {
+    id: 'usr-1',
+    name: 'Vikram Singh',
+    email: 'admin@gkbinternational.edu',
+    role: 'School Admin',
+    schoolId: 'school-gkb',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'usr-2',
+    name: 'Anjali Mehra',
+    email: 'verifier@gkbinternational.edu',
+    role: 'Verifier',
+    schoolId: 'school-gkb',
+    avatarUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'usr-3',
+    name: 'Prakash Sharma',
+    email: 'printer@gkbinternational.edu',
+    role: 'Print Operator',
+    schoolId: 'school-gkb',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'usr-4',
+    name: 'Super Administrator',
+    email: 'superadmin@cardit.io',
+    role: 'Super Admin',
+    avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'
+  }
+];
+
+export const INITIAL_JOBS: JobQueueItem[] = [
+  {
+    id: 'job-101',
+    title: 'A4 Duplex PDF Print Sheet Generation (Class 1)',
+    type: 'pdf_generation',
+    datasetId: 'ds-c1',
+    progress: 100,
+    status: 'completed',
+    details: 'Generated 49 A4 Front & Back sheets with crop marks and registration targets.',
+    createdAt: '2026-08-19T14:00:00Z'
+  },
+  {
+    id: 'job-102',
+    title: 'ZIP Photo Batch Auto-Matching (Class 2)',
+    type: 'photo_match',
+    datasetId: 'ds-c2',
+    progress: 75,
+    status: 'processing',
+    details: 'Processing 215 student photos. 180 matched by Admission Number.',
+    createdAt: '2026-08-19T16:10:00Z'
+  }
+];
